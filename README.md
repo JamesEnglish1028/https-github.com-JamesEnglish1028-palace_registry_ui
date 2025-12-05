@@ -47,6 +47,12 @@ A responsive web application for browsing and searching libraries from the Palac
    - Navigate to `http://localhost:3000`
    - For dark mode: `http://localhost:3000/?theme=dark`
 
+## Live Demo
+
+🌐 **[View Live Demo on GitHub Pages](https://jamesenglish1028.github.io/https-github.com-JamesEnglish1028-palace_registry_ui/)**
+
+The app is automatically deployed to GitHub Pages when changes are pushed to the main branch.
+
 ## Building for Production
 
 ```bash

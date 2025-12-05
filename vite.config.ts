@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(() => {
     return {
+      base: '/https-github.com-JamesEnglish1028-palace_registry_ui/',
       server: {
         port: 3000,
         host: '0.0.0.0',
