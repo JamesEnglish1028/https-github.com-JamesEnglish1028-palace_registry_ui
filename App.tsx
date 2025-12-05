@@ -74,6 +74,7 @@ const App: React.FC = () => {
   return (
     <div className={isDarkMode ? 'dark' : ''}>
       <div className="min-h-screen bg-gray-50 dark:bg-dark text-gray-900 dark:text-gray-100 transition-colors duration-300">
+        {/* Palace Library Registry Viewer - Mobile Optimized */}
         
         {/* Sticky Header */}
         <header className="sticky top-0 z-10 bg-white/90 dark:bg-darkSurface/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
