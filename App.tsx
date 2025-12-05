@@ -82,9 +82,9 @@ const App: React.FC = () => {
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <img 
-                    src="https://thepalaceproject.org/wp-content/uploads/2022/05/cropped-Palace_Favicon_512x512-192x192.png" 
+                    src="/palace-logo.png" 
                     alt="Palace Project Logo" 
-                    className="w-10 h-10 object-contain"
+                    className="w-8 h-8 object-contain flex-shrink-0"
                   />
                   <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                     Find Your Library
