@@ -79,6 +79,18 @@ Add `?theme=dark` to the URL to enable dark mode:
 http://localhost:3000/?theme=dark
 ```
 
+### Native App Integration
+Add `?native=true` to enable native app communication mode:
+```
+http://localhost:3000/?native=true
+```
+
+When in native mode, the "Add Library" button will attempt to communicate with the native app using multiple methods:
+- **Custom URL Scheme**: `palace://addLibrary?url=...&name=...`
+- **PostMessage**: Messages sent to parent frame (WebView)
+- **iOS WebKit Bridge**: `webkit.messageHandlers.palaceApp`
+- **Android Interface**: `window.Android.addLibrary()`
+
 ### Mobile Usage
 The app is optimized for mobile devices with:
 - Touch-friendly interface
@@ -108,6 +120,78 @@ The app fetches library data from the Palace Project registry API:
 - **Endpoint:** `https://registry.palaceproject.io/libraries`
 - **CORS Proxy:** Uses `corsproxy.io` to handle CORS restrictions
 - **Data Format:** OPDS catalog format with library metadata
+
+## Native App Integration
+
+### For Native App Developers
+
+The web app can communicate with native mobile apps through several methods:
+
+#### 1. URL Parameters
+- Add `?native=true` to enable native app mode
+- Combine with theme: `?native=true&theme=dark`
+
+#### 2. Communication Methods
+
+**Custom URL Scheme:**
+```javascript
+palace://addLibrary?url=<catalogUrl>&name=<libraryName>
+```
+
+**iOS WebKit Message Handler:**
+```javascript
+window.webkit.messageHandlers.palaceApp.postMessage({
+  action: 'addLibrary',
+  url: catalogUrl,
+  name: libraryName
+});
+```
+
+**Android WebView Interface:**
+```javascript
+window.Android.addLibrary(catalogUrl, libraryName);
+```
+
+**PostMessage (WebView):**
+```javascript
+window.parent.postMessage({
+  type: 'ADD_LIBRARY',
+  url: catalogUrl,
+  name: libraryName,
+  timestamp: Date.now()
+}, '*');
+```
+
+#### 3. Native App Setup
+
+**iOS (Swift):**
+```swift
+// Register URL scheme in Info.plist
+// Handle in AppDelegate or SceneDelegate
+func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    if url.scheme == "palace" && url.host == "addLibrary" {
+        // Parse URL parameters and add library
+        return true
+    }
+    return false
+}
+
+// WebView message handler
+webView.configuration.userContentController.add(self, name: "palaceApp")
+```
+
+**Android (Kotlin):**
+```kotlin
+// WebView JavaScript interface
+webView.addJavascriptInterface(WebAppInterface(), "Android")
+
+class WebAppInterface {
+    @JavascriptInterface
+    fun addLibrary(url: String, name: String) {
+        // Handle library addition
+    }
+}
+```
 
 ## Contributing
 

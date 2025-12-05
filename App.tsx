@@ -19,6 +19,54 @@ const App: React.FC = () => {
     return params.get('theme') === 'dark';
   });
 
+  // Check if running inside a native app (WebView)
+  const isNativeApp = useState<boolean>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('native') === 'true' || 
+           window.navigator.userAgent.includes('Palace') ||
+           window.location.hostname === 'localhost';
+  })[0];
+
+  // Function to send library URL to native app
+  const sendToNativeApp = (libraryUrl: string, libraryName: string) => {
+    try {
+      // Method 1: Custom URL Scheme (iOS/Android)
+      if (window.location.protocol === 'https:' || window.location.protocol === 'http:') {
+        const nativeUrl = `palace://addLibrary?url=${encodeURIComponent(libraryUrl)}&name=${encodeURIComponent(libraryName)}`;
+        window.location.href = nativeUrl;
+      }
+      
+      // Method 2: PostMessage to native app (WebView bridge)
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type: 'ADD_LIBRARY',
+          url: libraryUrl,
+          name: libraryName,
+          timestamp: Date.now()
+        }, '*');
+      }
+      
+      // Method 3: Call native bridge function if available
+      if ((window as any).webkit?.messageHandlers?.palaceApp) {
+        (window as any).webkit.messageHandlers.palaceApp.postMessage({
+          action: 'addLibrary',
+          url: libraryUrl,
+          name: libraryName
+        });
+      }
+      
+      // Method 4: Android WebView interface
+      if ((window as any).Android?.addLibrary) {
+        (window as any).Android.addLibrary(libraryUrl, libraryName);
+      }
+      
+    } catch (error) {
+      console.error('Failed to send library to native app:', error);
+      // Fallback: open in current window
+      window.open(libraryUrl, '_blank');
+    }
+  };
+
   // Fetch data
   useEffect(() => {
     let mounted = true;
@@ -171,7 +219,12 @@ const App: React.FC = () => {
               ) : (
                 <div className="flex flex-col gap-4">
                   {filteredLibraries.map((lib) => (
-                    <LibraryCard key={lib.id} library={lib} />
+                    <LibraryCard 
+                      key={lib.id} 
+                      library={lib} 
+                      isNativeApp={isNativeApp}
+                      onAddLibrary={sendToNativeApp}
+                    />
                   ))}
                 </div>
               )}
