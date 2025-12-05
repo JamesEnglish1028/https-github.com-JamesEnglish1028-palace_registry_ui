@@ -85,6 +85,12 @@ Add `?native=true` to enable native app communication mode:
 http://localhost:3000/?native=true
 ```
 
+**Combine with theming:**
+```
+http://localhost:3000/?native=true&theme=dark
+http://localhost:3000/?native=true&theme=light
+```
+
 When in native mode, the "Add Library" button will attempt to communicate with the native app using multiple methods:
 - **Custom URL Scheme**: `palace://addLibrary?url=...&name=...`
 - **PostMessage**: Messages sent to parent frame (WebView)
@@ -129,7 +135,10 @@ The web app can communicate with native mobile apps through several methods:
 
 #### 1. URL Parameters
 - Add `?native=true` to enable native app mode
-- Combine with theme: `?native=true&theme=dark`
+- **Theme Integration**: Both parameters work together
+  - Light mode: `?native=true` or `?native=true&theme=light`
+  - Dark mode: `?native=true&theme=dark`
+- **Automatic Theme Matching**: Native apps can detect system theme and set accordingly
 
 #### 2. Communication Methods
 
@@ -166,6 +175,13 @@ window.parent.postMessage({
 
 **iOS (Swift):**
 ```swift
+// Load WebView with theme detection
+let baseUrl = "https://jamesenglish1028.github.io/https-github.com-JamesEnglish1028-palace_registry_ui/"
+let isDarkMode = traitCollection.userInterfaceStyle == .dark
+let theme = isDarkMode ? "dark" : "light"
+let url = "\(baseUrl)?native=true&theme=\(theme)"
+webView.load(URLRequest(url: URL(string: url)!))
+
 // Register URL scheme in Info.plist
 // Handle in AppDelegate or SceneDelegate
 func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
@@ -182,6 +198,13 @@ webView.configuration.userContentController.add(self, name: "palaceApp")
 
 **Android (Kotlin):**
 ```kotlin
+// Load WebView with theme detection
+val baseUrl = "https://jamesenglish1028.github.io/https-github.com-JamesEnglish1028-palace_registry_ui/"
+val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+val theme = if (isDarkMode) "dark" else "light"
+val url = "$baseUrl?native=true&theme=$theme"
+webView.loadUrl(url)
+
 // WebView JavaScript interface
 webView.addJavascriptInterface(WebAppInterface(), "Android")
 
