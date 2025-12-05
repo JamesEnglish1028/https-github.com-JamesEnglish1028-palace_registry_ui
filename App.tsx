@@ -83,7 +83,7 @@ const App: React.FC = () => {
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <img 
-                    src="/palace-logo.png" 
+                    src="./palace-logo.png" 
                     alt="Palace Project Logo" 
                     className="w-8 h-8 object-contain flex-shrink-0"
                   />
