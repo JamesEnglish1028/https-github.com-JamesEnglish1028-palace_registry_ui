@@ -1,0 +1,5 @@
+{
+  "name": "Library Registry Viewer",
+  "description": "A responsive web application to browse and search libraries from the Palace Project registry, supporting light and dark modes.",
+  "requestFramePermissions": []
+}
